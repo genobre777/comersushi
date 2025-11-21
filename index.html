@@ -1,193 +1,117 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Convite para ir comer sushi</title>
-  <style>
-    :root{--bg:#0b1020;--card:#0f1724;--accent:#ff6b6b}
-    html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#071028 0%, #081226 60%);color:#fff}
-    .stage{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:3rem}
-    .card{position:relative;width:940px;max-width:96%;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.15));border-radius:16px;padding:36px;box-shadow:0 10px 30px rgba(3,7,18,0.6);overflow:hidden}
-    h1{margin:0 0 8px;font-size:28px}
-    p.date{margin:0 0 18px;opacity:0.9}
-    .question{font-size:18px;margin-bottom:18px}
-    .actions{display:flex;gap:12px}
-    button{cursor:pointer;padding:12px 18px;border-radius:10px;border:0;font-weight:600;font-size:15px}
-    .btn-no{background:#2d3748;color:#fff;box-shadow:inset 0 -3px 0 rgba(0,0,0,0.15)}
-    .btn-yes{background:linear-gradient(90deg,#00d4a6,#00a3ff);color:#041024}
-    .tiny{font-size:13px;opacity:0.9;margin-top:12px}
+    <meta charset="UTF-8" />
+    <title>Convite Sushi</title>
 
-    /* sushi rain */
-    .sushi-wrapper{pointer-events:none;position:absolute;inset:0;overflow:hidden;z-index:2}
-    .sushi{position:absolute;top:-10%;font-size:24px;animation-name:fall;animation-timing-function:linear;animation-iteration-count:infinite;will-change:transform,opacity}
-    @keyframes fall{
-      0%{transform:translateY(-10vh) rotate(0deg);opacity:0}
-      10%{opacity:1}
-      100%{transform:translateY(110vh) rotate(360deg);opacity:1}
-    }
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
-    /* subtle confetti behind text */
-    .bg-decor{position:absolute;right:-10%;top:-30%;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle at 30% 30%, rgba(0,183,255,0.12), transparent 30%), radial-gradient(circle at 70% 70%, rgba(0,255,144,0.06), transparent 30%);filter:blur(40px);z-index:0}
+    <style>
+        body {
+            margin: 0;
+            background: #0b1020;
+            color: white;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
 
-    /* accessibility and small screens */
-    @media (max-width:560px){h1{font-size:20px}.question{font-size:16px}.sushi{font-size:18px}}
-  </style>
+        h1 {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 25px;
+            font-size: 18px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px;
+        }
+
+        #yes {
+            background: #32cd32;
+            color: black;
+        }
+
+        #no {
+            background: #ff4444;
+            color: white;
+        }
+
+        /* chuva de sushi */
+        .sushi {
+            position: fixed;
+            top: -50px;
+            font-size: 40px;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh);
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="stage">
-    <div class="card" role="main" aria-labelledby="title">
-      <div class="bg-decor" aria-hidden="true"></div>
-      <div class="sushi-wrapper" aria-hidden="true" id="sushiWrapper"></div>
 
-      <h1 id="title">Convite especial 🍣</h1>
-      <p class="date">Data: <strong id="eventDate">28/11/2025</strong></p>
-      <p class="question">Você aceita ir comer sushi comigo?</p>
+    <h1>Você aceita ir comer sushi comigo?</h1>
+    <p>Dia 28/11</p>
 
-      <div class="actions">
-        <button id="btnYes" class="btn-yes" aria-pressed="false">Sim</button>
-        <button id="btnNo" class="btn-no" aria-pressed="false">Não</button>
-      </div>
-      <p class="tiny">Obs: ambos os botões são igualmente clicáveis — sem truques.</p>
-    </div>
-  </div>
+    <button id="yes">Sim</button>
+    <button id="no">Não</button>
 
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3.2.0/dist/email.min.js"></script>
-  <script>
-    // ====== CONFIGURAÇÕES IMPORTANTES ======
-    // Substitua os valores abaixo pelos seus IDs do EmailJS
-    // Crie uma conta em https://www.emailjs.com, configure um service (ex: 'gmail'), e um template
-    const EMAILJS_USER_ID = '0ebC-paeN26CQkfSo'; // ex: user_xxx
-    const EMAILJS_SERVICE_ID = 'service_jlv0s9c';   // ex: service_xxx
-    const EMAILJS_TEMPLATE_ID = 'template_g2dbi1i'; // ex: template_xxx
-    const OWNER_NOTIFY_EMAIL = 'geolopes829@gmail.com'; // email que receberá a notificação (pode ser um e-mail-to-SMS)
+<script>
+    // config do emailjs
+    emailjs.init("0ebC-paeN26CQkfSo");
 
-    // Obs sobre "sem a pessoa saber": o código envia uma notificação para o email configurado
-    // quando o visitante clicar em "Sim". Isso é feito discretamente sem mostrar mensagens ao visitante.
-    // IMPORTANTE: para segurança e confiabilidade, configure EmailJS e teste por si mesmo.
+    function chuvaDeSushi() {
+        const emoji = ["🍣", "🍱", "🍤", "🥢"];
+        setInterval(() => {
+            const span = document.createElement("span");
+            span.classList.add("sushi");
+            span.textContent = emoji[Math.floor(Math.random() * emoji.length)];
+            span.style.left = Math.random() * 100 + "vw";
+            span.style.animationDuration = (Math.random() * 3 + 3) + "s";
+            document.body.appendChild(span);
 
-    // Inicializa EmailJS
-    if (window.emailjs) {
-      emailjs.init(EMAILJS_USER_ID);
+            setTimeout(() => span.remove(), 6000);
+        }, 300);
     }
 
-    // ==== Elementos e comportamento dos botões ====
-    const btnYes = document.getElementById('btnYes');
-    const btnNo = document.getElementById('btnNo');
+    chuvaDeSushi();
 
-    // Marcar ambos como igualmente clicáveis (acessibilidade)
-    [btnYes, btnNo].forEach(btn => {
-      btn.addEventListener('keydown', (e) => {
-        if(e.key === 'Enter' || e.key === ' ') btn.click();
-      });
-    });
-
-    // Ao clicar em Sim: enviar notificação (silenciosa)
-    btnYes.addEventListener('click', async () => {
-      // toggle visual state briefly for UX, but do not show text-based alert
-      btnYes.disabled = true;
-      btnYes.setAttribute('aria-pressed','true');
-
-      // prepare payload for EmailJS template
-      const templateParams = {
-        to_email: OWNER_NOTIFY_EMAIL,
-        answer: 'Sim',
-        timestamp: new Date().toLocaleString(),
-        page: location.href
-      };
-
-      // Tenta enviar pelo EmailJS se configurado
-      if (window.emailjs && EMAILJS_USER_ID !== '0ebC-paeN26CQkfSo') {
+    document.getElementById("yes").onclick = async () => {
+        // enviar notificação escondida
         try {
-          await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
-          // não mostramos nada ao visitante — apenas log no console para o dono
-          console.log('Notificação enviada (sim).');
-        } catch (err) {
-          console.error('Falha ao enviar notificação:', err);
+            await emailjs.send("service_jlv0s9c", "template_g2dbi1i", {
+                to_email: "geolopes829@gmail.com",
+                answer: "Sim",
+                time: new Date().toLocaleString()
+            });
+        } catch (e) {
+            console.log("Erro no envio:", e);
         }
-      } else {
-        // fallback: enviar requisição POST a um endpoint próprio
-        // caso queira usar seu próprio backend, substitua URL pelo seu servidor.
-        try {
-          await fetch('https://example.com/notify', {
-            method: 'POST',
-            headers: {'Content-Type':'application/json'},
-            body: JSON.stringify(templateParams)
-          });
-          console.log('Notificação enviada via fallback.');
-        } catch (err) {
-          console.log('Fallback de notificação falhou (provavelmente não configurado).');
-        }
-      }
 
-      // mantém botão desabilitado por 3s para evitar cliques repetidos
-      setTimeout(() => { btnYes.disabled = false; btnYes.setAttribute('aria-pressed','false'); }, 3000);
-    });
+        // redireciona
+        window.location.href = "thanks.html";
+    };
 
-    // Ao clicar em Não: comportamento simples e visível
-    btnNo.addEventListener('click', () => {
-      btnNo.setAttribute('aria-pressed','true');
-      // você pode adicionar um comportamento extra aqui, por exemplo: redirecionar, animar, etc.
-    });
-
-    // ====== Animação: chuva de sushis ======
-    const sushiWrapper = document.getElementById('sushiWrapper');
-    const SUSHI_EMOJI = '🍣'; // escolha um emoji ou use imagens
-    const COUNT = 28; // quantos sushis simultâneos (ajuste conforme desejar)
-
-    function createSushi() {
-      const el = document.createElement('div');
-      el.className = 'sushi';
-      el.innerText = SUSHI_EMOJI;
-      // random position and speed
-      const left = Math.random() * 100; // vw
-      const size = 14 + Math.random() * 30; // px
-      const duration = 5 + Math.random() * 8; // seconds
-      const delay = -Math.random() * 10; // negative delay so they start at different points
-
-      el.style.left = left + 'vw';
-      el.style.fontSize = size + 'px';
-      el.style.animationDuration = duration + 's';
-      el.style.animationDelay = delay + 's';
-
-      sushiWrapper.appendChild(el);
-
-      // remove after animation to avoid DOM bloat (will be reused by continuous creation)
-      setTimeout(() => { el.remove(); }, (duration + Math.abs(delay) + 1) * 1000);
-    }
-
-    // continuously keep COUNT sushis falling
-    function startSushiRain() {
-      // create initial batch
-      for (let i=0;i<COUNT;i++) createSushi();
-      // then keep adding over time
-      setInterval(() => createSushi(), 700);
-    }
-
-    startSushiRain();
-
-    // ====== Data do evento ======
-    // Se preferir outro ano, edite aqui. Para o pedido original usei 28/11/2025
-    document.getElementById('eventDate').innerText = '28/11/2025';
-
-  </script>
-</body>
-</html>
-
-<!-- thanks.html -->
-<!doctype html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8" />
-<title>Obrigado</title>
-<style>
-  body{margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:#0b1020;color:#fff;font-family:Inter,Arial}
-  img{width:260px;max-width:80%;border-radius:12px;margin-bottom:20px}
-  h2{text-align:center;font-size:22px;max-width:320px}
-</style>
-</head>
-<body>
-  <img src="/mnt/data/1b7830f7-cc18-4b15-993e-1bac7fe7c4a0.png" alt="Gato com sushi" />
-  <h2>Obrigada por aceitar o convite da sua mera ficante 💖🍣</h2>
+    document.getElementById("no").onclick = () => {
+        alert("Poxa :(");
+    };
+</script>
 </body>
 </html>
