@@ -57,10 +57,10 @@
     // ====== CONFIGURAÇÕES IMPORTANTES ======
     // Substitua os valores abaixo pelos seus IDs do EmailJS
     // Crie uma conta em https://www.emailjs.com, configure um service (ex: 'gmail'), e um template
-    const EMAILJS_USER_ID = 'YOUR_EMAILJS_USER_ID'; // ex: user_xxx
-    const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID';   // ex: service_xxx
-    const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID'; // ex: template_xxx
-    const OWNER_NOTIFY_EMAIL = 'seu-telefone@provedor.com'; // email que receberá a notificação (pode ser um e-mail-to-SMS)
+    const EMAILJS_USER_ID = '0ebC-paeN26CQkfSo'; // ex: user_xxx
+    const EMAILJS_SERVICE_ID = 'service_jlv0s9c';   // ex: service_xxx
+    const EMAILJS_TEMPLATE_ID = 'template_g2dbi1i'; // ex: template_xxx
+    const OWNER_NOTIFY_EMAIL = 'geolopes829@gmail.com'; // email que receberá a notificação (pode ser um e-mail-to-SMS)
 
     // Obs sobre "sem a pessoa saber": o código envia uma notificação para o email configurado
     // quando o visitante clicar em "Sim". Isso é feito discretamente sem mostrar mensagens ao visitante.
@@ -97,7 +97,7 @@
       };
 
       // Tenta enviar pelo EmailJS se configurado
-      if (window.emailjs && EMAILJS_USER_ID !== 'YOUR_EMAILJS_USER_ID') {
+      if (window.emailjs && EMAILJS_USER_ID !== '0ebC-paeN26CQkfSo') {
         try {
           await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
           // não mostramos nada ao visitante — apenas log no console para o dono
